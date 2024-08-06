@@ -9,6 +9,7 @@ cards.forEach(item => {
 
 cards[0].classList.add('visible');
 
+updateProgressBar();
 
 window.addEventListener('click', function(e){
 
@@ -19,6 +20,7 @@ window.addEventListener('click', function(e){
         let res = checkAnswer(cards[currentIndex]);
 
         if(res){
+            updateProgressBar('next')
             setTimeout(function(){
                 cards[currentIndex].classList.remove('visible');
                 currentIndex = currentIndex + 1;
@@ -31,6 +33,7 @@ window.addEventListener('click', function(e){
     }
 
     if(e.target.closest('[data-nav="prev"]')){
+        updateProgressBar('prev')
         setTimeout(function(){
             cards[currentIndex].classList.remove('visible');
             currentIndex = currentIndex - 1;
@@ -61,3 +64,51 @@ function checkAnswer(currentCard){
         }
     }
 }
+
+
+function updateProgressBar(direction = 'start'){
+    
+    if(direction === 'next'){
+        currentCard = currentCard + 1;
+    }else if(direction === 'prev'){
+        currentCard = currentCard - 1;
+    }
+
+    const progressLabel = document.querySelectorAll('.progress__label strong');
+    const progressLineBar = document.querySelectorAll('.progress__line-bar');
+
+    const countableCards = document.querySelectorAll('[data-progress]');
+
+    let progressVal = Math.round(currentCard * 100 / (countableCards.length));
+
+    progressLabel.forEach(function(item){
+        item.innerHTML = progressVal + '%'
+    })
+
+    progressLineBar.forEach(function(item){
+        item.style.width = progressVal + '%'
+    })
+}
+
+//Phone mask
+mask('#tel');
+
+const submitForm = document.querySelector('#submitForm');
+const tel = document.querySelector('#tel');
+
+submitForm.onclick = function(){
+    if(tel.value === '+' || tel.value.length < 6){
+        tel.value = '';
+    }
+}
+
+
+const checkboxPolicy = document.querySelector('#policy');
+
+checkboxPolicy.addEventListener('focus', function(){
+    console.log('focus');
+})
+
+checkboxPolicy.addEventListener('blur', function(){
+    console.log('blur');
+})
